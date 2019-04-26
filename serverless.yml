@@ -1,0 +1,63 @@
+# Service
+service: kouticket
+
+# plugins
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: ap-northeast-1
+  environment: ${file(env.yml):environment}
+
+# custom
+custom:
+  serverless-offline:
+    port: 4000
+  # splitStacks:
+  #   perFunction: true
+  #   perType: true
+  webpack:
+    webpackConfig: ./webpack.config.js
+
+  webpackIncludeModules:
+      forceInclude:
+        - pg
+  # originHeader:
+  #   - ${file(env.yml):originHeader.DOMAIN_DEV}
+  #   - ${file(env.yml):originHeader.DOMAIN_STG}
+  #   - ${file(env.yml):originHeader.DOMAIN_PROD}
+  #   - ${file(env.yml):originHeader.DOMAIN_LOCAL}
+  headersHeader:
+    - Content-Type
+    - X-Amz-Date
+    - Authorization
+    - X-Api-Key
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
+    - Access-Control-Allow-Origin
+    - Access-Control-Allow-Credentials
+    - Access-Control-Allow-Headers
+
+functions:
+  app:
+    handler: controller/HomeController.index
+    name: homepage
+    events:
+      - http: 
+          path: /
+          method: get
+
+resources:
+  Resources:
+    GatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseType: UNAUTHORIZED
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'
+
