@@ -1,0 +1,38 @@
+{
+  "local": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "postgres",
+    "port": "5432",
+    "host": "localhost",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "postgres",
+    "port": "5432",
+    "host": "localhost",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "staging": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "postgres",
+    "port": "5432",
+    "host": "localhost",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "postgres",
+    "port": "5432",
+    "host": "localhost",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  }
+}
