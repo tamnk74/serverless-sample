@@ -43,6 +43,8 @@ custom:
     - Access-Control-Allow-Headers
 
 functions:
+  authorize:
+    handler: middleware/Authentication.handler
   app:
     handler: controller/HomeController.index
     name: homepage
@@ -50,6 +52,29 @@ functions:
       - http: 
           path: /
           method: get
+
+  login:
+    handler: controller/AuthController.login
+    name: login
+    events:
+      - http:
+          path: /api/login
+          method: post
+          cors: true
+
+  getUser:
+    handler: controller/AuthController.getUser
+    name: getUser
+    events:
+      - http:
+          path: /api/auth/getUser
+          method: get
+          cors: true
+          authorizer:
+            name: authorize
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            type: token
 
 resources:
   Resources:
