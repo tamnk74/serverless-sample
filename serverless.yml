@@ -1,5 +1,5 @@
 # Service
-service: kouticket
+service: project-name
 
 # plugins
 plugins:
@@ -9,9 +9,21 @@ plugins:
 provider:
   name: aws
   runtime: nodejs8.10
+  timeout: 120
   stage: dev
   region: ap-northeast-1
+  profile: ${file(env.yml):profile}
   environment: ${file(env.yml):environment}
+  apiKeys:
+    - your-key-name # this will be auto created when you deploy
+  usagePlan:
+    quota:
+      limit: 50000
+      offset: 1
+      period: MONTH
+    throttle:
+      burstLimit: 2000
+      rateLimit: 1000
 
 # custom
 custom:

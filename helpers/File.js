@@ -1,6 +1,9 @@
 import fs from 'fs';
 import config from '../config';
 import csv from 'fast-csv';
+import AWS from 'aws-sdk';
+
+const s3 = new AWS.S3();
 
 class File {
 
@@ -33,7 +36,7 @@ class File {
    *
    *
    * @param {String} path
-   * @returns {Promise<void>}
+   * @returns {Promise<*>}
    */
   async loadCSV(path) {
     return new Promise(function (resolve, reject) {
@@ -66,6 +69,35 @@ class File {
       }
     });
   }
+
+  /**
+   * Read csv file from S3
+   *
+   * @param {Object} params S3 config
+   * @returns {Promise<void>}
+   */
+  async readCSVS3(params) {
+    return new Promise(function (resolve, reject) {
+      const results = [];
+      try {
+        console.log(`Start reading file csv: `, params);
+        const stream = s3.getObject(params).createReadStream();
+        csv.fromStream(stream, {delimiter: ';', trim: true})
+          .on("data", function (data) {
+            results.push({
+              id: data[0] || '',
+              name: data[1] || '',
+            });
+          })
+          .on('end', () => {
+            console.log(`Read successfully with ${results.length} records`);
+            resolve(results);
+          });
+      } catch (e) {
+        console.log(e);
+        reject(e);
+      }
+    });
 }
 
 export {File}
