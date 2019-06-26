@@ -33,7 +33,7 @@ const s3Trigger = async (event, context, callback) => {
   const response = {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'Welcome to Kouticket',
+      message: 'Welcome to Serverless',
     }, null, 2)
   }
   

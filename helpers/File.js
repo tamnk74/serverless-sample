@@ -4,6 +4,8 @@ import csv from 'fast-csv';
 import AWS from 'aws-sdk';
 
 const s3 = new AWS.S3();
+const MAX_WIDTH = 240;
+const MAX_HEIGHT = 200;
 
 class File {
 
@@ -47,17 +49,8 @@ class File {
           .fromPath(path, {delimiter: ';', trim: true})
           .on("data", function (data) {
             results.push({
-              map_id: data[0],
-              hall_nm_kana: data[1],
-              hall_nm: data[2],
-              prefecture: data[6],
-              address: data[7],
-              tel_no: data[12],
-              url: data[15],
-              room_1: data[48],
-              room_2: data[67],
-              room_3: data[86],
-              room_4: data[105],
+              id: data[0],
+              name: data[1],
             });
           })
           .on('end', () => {
@@ -98,6 +91,37 @@ class File {
         reject(e);
       }
     });
+  }
+
+  /**
+   * Upload file to S3
+   * @param {Object} data
+   * @param {Object} imageBase64
+   */
+  async uploadS3(data, imageBase64) {
+    const buffer = Buffer.from(imageBase64, 'base64');
+    const resizeBuffer = await sharp(buffer).resize(MAX_WIDTH, MAX_HEIGHT).toBuffer();
+    // Upload resize image
+    const paramThumbnail = {
+      Bucket: config.s3Bucket + '/images/shows/' + data.client_id,
+      Key: data.show_no + '_t.png',
+      Body: resizeBuffer,
+      ContentEncoding: 'base64'
+    };
+    console.log('Uploading...', paramThumbnail);
+    const result = await new Promise((resolve, reject) => {
+      s3.putObject(paramThumbnail, function (err, data) {
+        if (err) {
+          console.log(err, err.stack);
+          reject(err);
+        } else {
+          console.log(data);
+          resolve(data);
+        }
+      });
+    });
+    console.log('Uploaded ', paramThumbnail, result);
+  }
 }
 
 export {File}
