@@ -16,7 +16,7 @@ export default class Email {
 
     // Message content
     const message = {
-      from: 'tamnk@rikkeisoft.com',
+      from: 'tamnk74@gmail.com',
       // Comma separated list of recipients
       to: data.receiver,
       // Subject of the message

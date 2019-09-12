@@ -3,7 +3,8 @@ import config from '../config';
 import csv from 'fast-csv';
 import AWS from 'aws-sdk';
 
-const s3 = new AWS.S3();
+const s3Config = {};
+const s3 = new AWS.S3(s3Config);
 const MAX_WIDTH = 240;
 const MAX_HEIGHT = 200;
 
@@ -17,7 +18,7 @@ class File {
    * @returns {string}
    * @memberof File
    */
-  async loadSql(sqlFile, pathFolder = 'sql', jpEncode = false) {
+   loadSql(sqlFile, pathFolder = 'sql', jpEncode = false) {
     // Add config path of file SQL
     if (pathFolder == null || typeof pathFolder === "undefined") {
       pathFolder = config.sqlPath;
@@ -42,7 +43,7 @@ class File {
    */
   async loadCSV(path) {
     return new Promise(function (resolve, reject) {
-      let results = [];
+      const results = [];
       try {
         console.log(`Start reading file csv: ${path}`);
         csv

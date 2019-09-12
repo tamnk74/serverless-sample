@@ -27,8 +27,8 @@ const handler = async (event, context, callback) => {
     }
     const publicKey = fs.readFileSync(path.resolve('config', 'cert', 'public.key'), 'utf8');
     const verifyOptions = {
-      issuer: 'Kouticket',
-      subject: 'kouticket@pastorale.jp',
+      issuer: 'Serverless',
+      subject: 'admin@gmail.com',
       audience: 'https://gledi2t6xb.execute-api.ap-northeast-1.amazonaws.com',
       expiresIn: "12h",
       algorithm: "RS256"
